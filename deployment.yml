@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+# podstawowe dane wdrożenia
+metadata:
+  # tag serwera, który będzie używany do modyfikacji jego parametrów i przypisywania uslugi oraz Ingress
+  labels:
+    app: lab10-server
+  annotations:
+    kubernetes.io/change-cause: "v1.9"
+  # nazwa wdrożenia i przestrzeń nazw, w której się znajduje
+  name: lab10-deployment
+  namespace: lab10
+# specyfikacja wdrożenia
+spec:
+  # liczba replik
+  replicas: 4
+  # definicja tagu, dla którego zostanie zastosowana strategia aktualizacji
+  selector:
+    matchLabels:
+      app: lab10-server
+  # strategia aktualizacji obrazu - typ RollingUpdate, maksymalnie 5 podów w ramach aplikacji i minimalnie 2 działające pody
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 5
+      maxUnavailable: 2
+  # serwer HTTP - pod wykorzystujący zdefiniowany w repozytorium Source repo i umieszczony na DockerHub obraz serwera, któremu nadany jest odpowiedni tag
+  template:
+    metadata:
+      labels:
+        app: lab10-server
+    spec:
+      containers:
+      - image: djkrnl/lab10:abcdefabcdefabcdefabcdefabcdefabcdefabcd
+        name: lab10-server
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always

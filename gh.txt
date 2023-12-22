@@ -1,0 +1,15 @@
+// Krok 1b
+// Utworzenie repozytorium GitHub
+C:\Users\Kornel\Desktop\POLITECHNIKA\LABORATORIA\PF-SwCO\10\zadanie>gh repo crea
+te
+? What would you like to do? Create a new repository on GitHub from scratch
+? Repository name lab10-config
+? Description Repozytorium Config repo
+? Visibility Public
+? Would you like to add a README file? No
+? Would you like to add a .gitignore? No
+? Would you like to add a license? No
+? This will create "lab10-config" as a public repository on GitHub. Continue? Yes
+✓ Created repository djkrnl/lab10-config on GitHub
+? Clone the new repository locally? Yes
+// Przesłanie plików YAML na repozytorium - commit i push

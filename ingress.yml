@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+# podstawowe dane usługi dostępu zewnętrznego (Ingress) - nazwa i jej przestrzeń nazw
+metadata:
+  name: lab10-ingress
+  namespace: lab10
+# specyfikacja Ingress (zasady)
+spec:
+  rules:
+  # adres, pod którym dostępne będą strony serwera HTTP
+  - host: zad2.lab
+    http:
+      paths:
+        # prefiks (ścieżka) stron
+      - pathType: Prefix
+        path: "/"
+        # usługa, która będzie zapewniać strony i port, który wykorzystuje
+        backend:
+          service:
+            name: lab10-service
+            port:
+              number: 80

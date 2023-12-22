@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+# podstawowe dane usługi - nazwa i jej przestrzeń nazw
+metadata:
+  name: lab10-service
+  namespace: lab10
+# specyfikacja usługi
+spec:
+  # typ usługi
+  type: NodePort
+  # definicja tagu, do którego przypisana zostanie usługa
+  selector:
+    app: lab10-server
+  # przypisanie portu 80 serwera HTTP (targetPort) do portu 80 usługi
+  ports:
+    - port: 80
+      targetPort: 80
