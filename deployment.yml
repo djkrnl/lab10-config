@@ -31,7 +31,7 @@ spec:
         app: lab10-server
     spec:
       containers:
-      - image: djkrnl/lab10:abcdefabcdefabcdefabcdefabcdefabcdefabcd
+      - image: djkrnl/lab10:f77602f78daf289bc4d3f2991fc6965821f21948
         name: lab10-server
       dnsPolicy: ClusterFirst
       restartPolicy: Always
