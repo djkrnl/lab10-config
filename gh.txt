@@ -13,3 +13,25 @@ te
 ✓ Created repository djkrnl/lab10-config on GitHub
 ? Clone the new repository locally? Yes
 // Przesłanie plików YAML na repozytorium - commit i push
+PS C:\Users\Kornel\Desktop\POLITECHNIKA\LABORATORIA\PF-SwCO\10\zadanie\lab10-config> git add .
+PS C:\Users\Kornel\Desktop\POLITECHNIKA\LABORATORIA\PF-SwCO\10\zadanie\lab10-config> git commit -m "v1"
+[master (root-commit) b52e745] v1
+ 5 files changed, 96 insertions(+)
+ create mode 100644 deployment.yml
+ create mode 100644 gh.txt
+ create mode 100644 ingress.yml
+ create mode 100644 namespace.yml
+ create mode 100644 service.yml
+PS C:\Users\Kornel\Desktop\POLITECHNIKA\LABORATORIA\PF-SwCO\10\zadanie\lab10-config> git branch -M main
+PS C:\Users\Kornel\Desktop\POLITECHNIKA\LABORATORIA\PF-SwCO\10\zadanie\lab10-config> git remote add origin https://github.com/djkrnl/lab10-config.git
+error: remote origin already exists.
+PS C:\Users\Kornel\Desktop\POLITECHNIKA\LABORATORIA\PF-SwCO\10\zadanie\lab10-config> git push -u origin main
+Enumerating objects: 7, done.
+Counting objects: 100% (7/7), done.
+Delta compression using up to 12 threads
+Compressing objects: 100% (7/7), done.
+Writing objects: 100% (7/7), 2.03 KiB | 2.03 MiB/s, done.
+Total 7 (delta 0), reused 0 (delta 0), pack-reused 0
+To https://github.com/djkrnl/lab10-config.git
+ * [new branch]      main -> main
+branch 'main' set up to track 'origin/main'.
