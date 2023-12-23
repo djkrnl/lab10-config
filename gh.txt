@@ -169,3 +169,63 @@ djkrnl@djkrnl-VirtualBox:~$ curl zad2.lab
 </html>
 
 // Krok 4b
+// Wysłanie zmodyfikowanego pliku index.html do repozytorium
+PS C:\Users\Kornel\Desktop\POLITECHNIKA\LABORATORIA\PF-SwCO\10\zadanie\lab10-source> git add .
+PS C:\Users\Kornel\Desktop\POLITECHNIKA\LABORATORIA\PF-SwCO\10\zadanie\lab10-source> git commit -m "v3"
+[main 2f44d6e] v3
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+PS C:\Users\Kornel\Desktop\POLITECHNIKA\LABORATORIA\PF-SwCO\10\zadanie\lab10-source> git push
+Enumerating objects: 5, done.
+Counting objects: 100% (5/5), done.
+Delta compression using up to 12 threads
+Compressing objects: 100% (3/3), done.
+Writing objects: 100% (3/3), 286 bytes | 286.00 KiB/s, done.
+Total 3 (delta 2), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
+To https://github.com/djkrnl/lab10-source.git
+   693c9ac..2f44d6e  main -> main
+// Uruchomienie workflow w Source repo po dokonaniu zmian w index.html
+PS C:\Users\Kornel\Desktop\POLITECHNIKA\LABORATORIA\PF-SwCO\10\zadanie\lab10-source> gh workflow run zad2lab10.yml
+✓ Created workflow_dispatch event for zad2lab10.yml at main
+
+To see runs for this workflow, try: gh run list --workflow=zad2lab10.yml
+// Weryfikacja poprawności uruchomienia workflow
+PS C:\Users\Kornel\Desktop\POLITECHNIKA\LABORATORIA\PF-SwCO\10\zadanie\lab10-source> gh run list --workflow=zad2lab10.yml
+STATUS  TITLE           WORKFLOW        BRANCH  EVENT              ID          ELAPSED  AGE
+✓       lab10-workflow  lab10-workflow  main    workflow_dispatch  7309295861  36s      about 1 minute ago
+(...)
+// Śledzenie procesu aktualizacji
+djkrnl@djkrnl-VirtualBox:~$ kubectl get all -n lab10
+NAME                                    READY   STATUS    RESTARTS   AGE
+pod/lab10-deployment-5ccc684944-dgb2p   1/1     Running   0          46s
+pod/lab10-deployment-5ccc684944-p6657   1/1     Running   0          46s
+pod/lab10-deployment-5ccc684944-vz9m7   1/1     Running   0          46s
+pod/lab10-deployment-5ccc684944-wsh2p   1/1     Running   0          46s
+
+NAME                    TYPE       CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE
+service/lab10-service   NodePort   10.103.244.172   <none>        80:31915/TCP   16h
+
+NAME                               READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/lab10-deployment   4/4     4            4           16h
+
+NAME                                          DESIRED   CURRENT   READY   AGE
+replicaset.apps/lab10-deployment-5ccc684944   4         4         4       46s
+replicaset.apps/lab10-deployment-7cd8459c99   0         0         0       16h
+// Sprawdzenie poprawności aktualizacji
+djkrnl@djkrnl-VirtualBox:~$ kubectl rollout history deployment lab10-deployment -n lab10
+deployment.apps/lab10-deployment 
+REVISION  CHANGE-CAUSE
+1         v1.9
+2         v1.9
+// Sprawdzenie dostępności nowej strony głównej serwera
+djkrnl@djkrnl-VirtualBox:~$ curl zad2.lab
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>PF-SwCO</title>
+	</head>
+<body>
+	<h1>Kornel Szarapajew</h1>
+	<p>Wersja 3</p>
+</body>
+</html>
