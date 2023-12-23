@@ -34,3 +34,138 @@ Total 7 (delta 0), reused 0 (delta 0), pack-reused 0
 To https://github.com/djkrnl/lab10-config.git
  * [new branch]      main -> main
 branch 'main' set up to track 'origin/main'.
+
+// Krok 4a
+// Sprawdzenie poprawności utworzenia poszczególnych elementów aplikacji
+djkrnl@djkrnl-VirtualBox:~$ kubectl get all -n lab10
+NAME                                    READY   STATUS    RESTARTS   AGE
+pod/lab10-deployment-7cd8459c99-lbnvb   1/1     Running   0          12m
+pod/lab10-deployment-7cd8459c99-m7dpj   1/1     Running   0          12m
+pod/lab10-deployment-7cd8459c99-nmdkv   1/1     Running   0          12m
+pod/lab10-deployment-7cd8459c99-qd7bl   1/1     Running   0          12m
+
+NAME                    TYPE       CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE
+service/lab10-service   NodePort   10.103.244.172   <none>        80:31915/TCP   12m
+
+NAME                               READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/lab10-deployment   4/4     4            4           12m
+
+NAME                                          DESIRED   CURRENT   READY   AGE
+replicaset.apps/lab10-deployment-7cd8459c99   4         4         4       12m
+// Opis wdrożenia
+djkrnl@djkrnl-VirtualBox:~$ kubectl describe deployment lab10-deployment -n lab10
+Name:                   lab10-deployment
+Namespace:              lab10
+CreationTimestamp:      Sat, 23 Dec 2023 01:26:02 +0100
+Labels:                 app=lab10-server
+Annotations:            deployment.kubernetes.io/revision: 1
+                        kubernetes.io/change-cause: v1.9
+Selector:               app=lab10-server
+Replicas:               4 desired | 4 updated | 4 total | 4 available | 0 unavailable
+StrategyType:           RollingUpdate
+MinReadySeconds:        0
+RollingUpdateStrategy:  2 max unavailable, 5 max surge
+Pod Template:
+  Labels:  app=lab10-server
+  Containers:
+   lab10-server:
+    Image:        djkrnl/lab10:f77602f78daf289bc4d3f2991fc6965821f21948
+    Port:         <none>
+    Host Port:    <none>
+    Environment:  <none>
+    Mounts:       <none>
+  Volumes:        <none>
+Conditions:
+  Type           Status  Reason
+  ----           ------  ------
+  Progressing    True    NewReplicaSetAvailable
+  Available      True    MinimumReplicasAvailable
+OldReplicaSets:  <none>
+NewReplicaSet:   lab10-deployment-7cd8459c99 (4/4 replicas created)
+Events:          <none>
+// Opis usługi
+djkrnl@djkrnl-VirtualBox:~$ kubectl describe service lab10-service -n lab10
+Name:                     lab10-service
+Namespace:                lab10
+Labels:                   <none>
+Annotations:              <none>
+Selector:                 app=lab10-server
+Type:                     NodePort
+IP Family Policy:         SingleStack
+IP Families:              IPv4
+IP:                       10.103.244.172
+IPs:                      10.103.244.172
+Port:                     <unset>  80/TCP
+TargetPort:               80/TCP
+NodePort:                 <unset>  31915/TCP
+Endpoints:                10.244.120.100:80,10.244.120.103:80,10.244.120.104:80 + 1 more...
+Session Affinity:         None
+External Traffic Policy:  Cluster
+Events:                   <none>
+// Opis Ingress
+djkrnl@djkrnl-VirtualBox:~$ kubectl describe ingress lab10-ingress -n lab10
+Name:             lab10-ingress
+Labels:           <none>
+Namespace:        lab10
+Address:          192.168.49.2
+Ingress Class:    nginx
+Default backend:  <default>
+Rules:
+  Host        Path  Backends
+  ----        ----  --------
+  zad2.lab    
+              /   lab10-service:80 (10.244.120.100:80,10.244.120.103:80,10.244.120.104:80 + 1 more...)
+Annotations:  <none>
+Events:       <none>
+// Sprawdzenie dostępności strony głównej serwera za pośrednictwem adresu URL usługi
+djkrnl@djkrnl-VirtualBox:~$ minikube service lab10-service -n lab10 --url
+http://192.168.49.2:31915
+djkrnl@djkrnl-VirtualBox:~$ curl http://192.168.49.2:31915
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>PF-SwCO</title>
+	</head>
+<body>
+	<h1>Kornel Szarapajew</h1>
+	<p>Wersja 2</p>
+</body>
+</html>
+// Sprawdzenie dostępności strony głównej serwera za pośrednictwem adresu zdefiniowanego w Ingress
+djkrnl@djkrnl-Virtualcurl -H "Host: zad2.lab" http://192.168.49.2
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>PF-SwCO</title>
+	</head>
+<body>
+	<h1>Kornel Szarapajew</h1>
+	<p>Wersja 2</p>
+</body>
+</html>
+djkrnl@djkrnl-VirtualBox:~$ sudo vim /etc/hosts
+djkrnl@djkrnl-VirtualBox:~$ sudo cat /etc/hosts
+127.0.0.1	localhost
+127.0.1.1	djkrnl-VirtualBox
+
+# The following lines are desirable for IPv6 capable hosts
+::1     ip6-localhost ip6-loopback
+fe00::0 ip6-localnet
+ff00::0 ip6-mcastprefix
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+
+192.168.49.2 zad2.lab
+djkrnl@djkrnl-VirtualBox:~$ curl zad2.lab
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>PF-SwCO</title>
+	</head>
+<body>
+	<h1>Kornel Szarapajew</h1>
+	<p>Wersja 2</p>
+</body>
+</html>
+
+// Krok 4b
